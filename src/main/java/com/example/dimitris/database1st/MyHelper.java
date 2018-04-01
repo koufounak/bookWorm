@@ -33,7 +33,8 @@ public class MyHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME + " ( " + BOOK_TITLE + " TEXT, " + PUBLISHER + " TEXT, " + BOOK_RATING + " INTEGER, PRIMARY KEY(" + BOOK_TITLE +","+PUBLISHER+") );");
+        sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME + " ( " + BOOK_TITLE + " TEXT, " + PUBLISHER +
+                               " TEXT, " + BOOK_RATING + " INTEGER, PRIMARY KEY(" + BOOK_TITLE +","+PUBLISHER+") );");
 
     }
 
@@ -117,7 +118,8 @@ public class MyHelper extends SQLiteOpenHelper {
         String q = "SELECT * FROM books WHERE bookTitle = \"" + bookTitle + "\" AND publisher = \"" + publisher + "\"  ";
         Cursor cursor = sqLiteDatabase.rawQuery(q,null);
         if(cursor.moveToFirst()){
-            sqLiteDatabase.update(TABLE_NAME, values, "bookTitle = ? AND publisher = ?", new String[] {bookTitle, publisher});
+            sqLiteDatabase.update(TABLE_NAME, values, "bookTitle = ? AND publisher = ?",
+                                  new String[] {bookTitle, publisher});
             result = true;
         }
         cursor.close();
