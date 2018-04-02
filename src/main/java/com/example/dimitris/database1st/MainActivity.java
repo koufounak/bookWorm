@@ -46,6 +46,11 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /**
+     *  This method adds a row to the database
+     *  If row already exists catches exception and shows "ALREADY ADDED"
+     * @param v
+     */
     public void addEntry(View v){
         bookTitle = (EditText) findViewById(R.id.book);
         publisher = (EditText) findViewById(R.id.bookPublisher);
@@ -69,6 +74,11 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This method deletes the row given from EditText
+     * If no rows deleted catches exception and shows "No Match Found"
+     * @param v
+     */
     public void deleteEntry(View v){
         bookTitle = (EditText) findViewById(R.id.book);
         publisher = (EditText) findViewById(R.id.bookPublisher);
@@ -90,6 +100,30 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    public void findEntry(View v){
+        bookTitle = (EditText) findViewById(R.id.book);
+        publisher = (EditText) findViewById(R.id.bookPublisher);
+
+        String title = bookTitle.getText().toString();
+        String bookPublisher = publisher.getText().toString();
+        String rating;
+
+        Cursor cursor;
+        cursor = myDb.findRecord(title,bookPublisher);
+
+        if(cursor.moveToFirst()){
+            cursor.moveToFirst();
+            title = cursor.getString(1);
+            bookPublisher = cursor.getString(2);
+            rating = cursor.getString(3);
+            bookPublisher.concat(rating);
+        }
+        else{
+            Toast.makeText(this, "No match found", Toast.LENGTH_SHORT).show();
+        }
+        cursor.close();
     }
 
 

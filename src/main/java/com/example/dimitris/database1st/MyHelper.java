@@ -44,6 +44,7 @@ public class MyHelper extends SQLiteOpenHelper {
     }
 
     /**
+     *  This method adds a row to the database
      *
      * @param bookTitle
      * @param publisher
@@ -71,7 +72,7 @@ public class MyHelper extends SQLiteOpenHelper {
     }
 
     /**
-     *
+     * This method deletes a row from the database
      * @param bookTitle
      * @param publisher
      * @return
@@ -102,7 +103,7 @@ public class MyHelper extends SQLiteOpenHelper {
 
     public Cursor findRecord(String bootTitle, String publisher){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
-        String q = "SELECT * FROM books WHERE bookTitle = \"" + bootTitle + "\" AND publisher = \"" + publisher + "\" ";
+        String q = "SELECT * FROM books WHERE " + BOOK_TITLE + " ='" + bootTitle + "'" + " AND " + PUBLISHER + "='" + publisher + "'";
         Cursor cursor = sqLiteDatabase.rawQuery(q,null);
         return cursor;
     }
