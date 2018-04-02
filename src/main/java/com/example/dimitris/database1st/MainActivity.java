@@ -6,23 +6,17 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RatingBar;
-import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.Toast;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.database.sqlite.SQLiteOpenHelper;
+
 
 
 
 public class MainActivity extends AppCompatActivity {
     EditText bookTitle, publisher;
-    //RatingBar ratingBar;
+    RatingBar ratingBar;
 
-    int rating;
+    float ratingValue;
     private static final String TAG = "MyHelper";
 
     MyHelper myDb;
@@ -30,13 +24,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bookTitle = (EditText) findViewById(R.id.book);
-        publisher = (EditText) findViewById(R.id.bookPublisher);
-
-        //ratingBar = (RatingBar) findViewById(R.id.ratingBar);
-        //ratingBar.setRating(0);
-        rating = 5;
         setContentView(R.layout.activity_main);
+        bookTitle = (EditText) findViewById(R.id.book);//bookTitle editText
+        publisher = (EditText) findViewById(R.id.bookPublisher);//publisher editText
+
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        //RatingBar listener
+        ratingBar.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener(){
+            @Override
+            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser){
+                ratingValue = rating;
+
+            }
+        });
+        //rating = 5;
+
         myDb = new MyHelper(this);
     }
 
@@ -60,8 +62,8 @@ public class MainActivity extends AppCompatActivity {
         myDb = new MyHelper(this);
         String title = bookTitle.getText().toString();
         String bookPublisher = publisher.getText().toString();
-        //int rating = ratingBar.getNumStars();
-        boolean success = myDb.addRecord(title, bookPublisher, rating);
+        //ratingBar.getNumStars();
+        boolean success = myDb.addRecord(title, bookPublisher, ratingValue);
 
         if(success){
             Toast.makeText(this, "ADDED", Toast.LENGTH_SHORT).show();
@@ -108,22 +110,32 @@ public class MainActivity extends AppCompatActivity {
 
         String title = bookTitle.getText().toString();
         String bookPublisher = publisher.getText().toString();
-        String rating;
 
         Cursor cursor;
         cursor = myDb.findRecord(title,bookPublisher);
 
         if(cursor.moveToFirst()){
             cursor.moveToFirst();
-            title = cursor.getString(1);
-            bookPublisher = cursor.getString(2);
-            rating = cursor.getString(3);
-            bookPublisher.concat(rating);
+            bookTitle.setText(cursor.getString(0));
+            publisher.setText(cursor.getString(1));
+            ratingBar.setRating(Float.parseFloat(cursor.getString(2)));
+
+            Toast.makeText(this, "Book found", Toast.LENGTH_SHORT).show();
         }
         else{
             Toast.makeText(this, "No match found", Toast.LENGTH_SHORT).show();
         }
         cursor.close();
+    }
+
+    public void updateEntry(View v){
+        bookTitle = (EditText) findViewById(R.id.book);
+        publisher = (EditText) findViewById(R.id.bookPublisher);
+
+        String title = bookTitle.getText().toString();
+        String bookPublisher = publisher.getText().toString();
+
+        myDb.updateRecord(title, bookPublisher, ratingValue);
     }
 
 

@@ -5,11 +5,8 @@ import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
-import android.database.sqlite.SQLiteOpenHelper;
+
 
 /**
  * Created by Dimitris Koufounakis on 28/3/2018.
@@ -33,7 +30,8 @@ public class MyHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME + " ( " + BOOK_TITLE + " TEXT, " + PUBLISHER + " TEXT, " + BOOK_RATING + " INTEGER, PRIMARY KEY(" + BOOK_TITLE +","+PUBLISHER+") );");
+        sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME + " ( " + BOOK_TITLE + " TEXT, " + PUBLISHER + " TEXT, " + BOOK_RATING +
+                " REAL, PRIMARY KEY(" + BOOK_TITLE +","+PUBLISHER+") );");
 
     }
 
@@ -51,7 +49,7 @@ public class MyHelper extends SQLiteOpenHelper {
      * @param rating
      * @return
      */
-    public boolean addRecord(String bookTitle, String publisher, int rating){
+    public boolean addRecord(String bookTitle, String publisher, float rating){
 
         boolean result = false;
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
@@ -108,17 +106,17 @@ public class MyHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
-    public boolean updateRecord(String bookTitle, String publisher, int rating){
+    public boolean updateRecord(String bookTitle, String publisher, float rating){
         SQLiteDatabase sqLiteDatabase = this.getWritableDatabase();
         boolean result = false;
         ContentValues values = new ContentValues();
         values.put(BOOK_TITLE,bookTitle);
         values.put(PUBLISHER,publisher);
         values.put(BOOK_RATING,rating);
-        String q = "SELECT * FROM books WHERE bookTitle = \"" + bookTitle + "\" AND publisher = \"" + publisher + "\"  ";
+        String q = "SELECT * FROM books WHERE " + BOOK_TITLE + " ='" + bookTitle + "'" + " AND " + PUBLISHER + "='" + publisher + "'";
         Cursor cursor = sqLiteDatabase.rawQuery(q,null);
         if(cursor.moveToFirst()){
-            sqLiteDatabase.update(TABLE_NAME, values, "bookTitle = ? AND publisher = ?", new String[] {bookTitle, publisher});
+            sqLiteDatabase.update(TABLE_NAME, values, q, null);
             result = true;
         }
         cursor.close();
