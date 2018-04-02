@@ -44,7 +44,6 @@ public class MyHelper extends SQLiteOpenHelper {
 
     /**
      *  This method adds a row to the database
-     *
      * @param bookTitle
      * @param publisher
      * @param rating

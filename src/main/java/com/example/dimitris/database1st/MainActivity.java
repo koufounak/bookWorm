@@ -10,6 +10,9 @@ import android.widget.Toast;
 import android.database.Cursor;
 
 
+/**
+ * Main Activity
+ */
 
 
 public class MainActivity extends AppCompatActivity {
